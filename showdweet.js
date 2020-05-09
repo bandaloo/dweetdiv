@@ -114,7 +114,7 @@ function showDweet(id, code, fps = 60) {
         const trueSteps = Math.floor(t * fps - totalSteps);
         currSteps = Math.min(trueSteps, MAX_STEPS);
         // back time up if we are not doing all of the steps
-        wastedTime += (trueSteps - currSteps) * fps;
+        wastedTime += ((trueSteps - currSteps) / fps) * 1000;
         console.log(currSteps);
         totalSteps += currSteps;
         t = totalSteps / fps;
