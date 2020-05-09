@@ -157,8 +157,11 @@ function addDweet(id, code, options) {
   /** how many times to run the dwitter draw function */
   let currSteps = 1; // won't change from 1 if framerate is unlocked
 
+  /**
+   * kick off the animation requests
+   * @param {number} currTime
+   */
   const update = (currTime) => {
-    canvas.width = canvas.width;
     let t = (currTime - wastedTime) / 1000;
 
     if (visible()) {
@@ -180,12 +183,15 @@ function addDweet(id, code, options) {
       for (let i = 0; i < currSteps; i++) {
         u(t, c, x, R, C, S, T);
       }
-      // TODO only do this if there is an update
+
       // copy the dwitter canvas onto the display canvas
-      context.save();
-      context.scale(canvas.width / c.width, canvas.height / c.height);
-      context.drawImage(c, 0, 0);
-      context.restore();
+      if (currSteps) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.save();
+        context.scale(canvas.width / c.width, canvas.height / c.height);
+        context.drawImage(c, 0, 0);
+        context.restore();
+      }
     } else {
       // keep track of time not on screen (important for unlocked framerate)
       wastedTime += currTime - prevTime;
