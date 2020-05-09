@@ -1,6 +1,7 @@
 "use strict";
 
 function showDweet(id, code, fps = 60) {
+  // code for draw function has to be a string
   if (typeof code !== "string") {
     throw new TypeError("type of code has to be a string");
   }
@@ -8,6 +9,7 @@ function showDweet(id, code, fps = 60) {
   let steps = 0;
   const unlock = fps === Infinity;
 
+  // bad fps can result in either a type error or range error
   if (!unlock) {
     if (typeof fps !== "number" || isNaN(fps)) {
       throw new TypeError("fps has to be a number that is also not NaN");
@@ -17,6 +19,7 @@ function showDweet(id, code, fps = 60) {
     }
   }
 
+  // try to get the div for adding the display canvas
   const div = document.getElementById(id);
   if (div === null) {
     throw new Error(
@@ -24,14 +27,17 @@ function showDweet(id, code, fps = 60) {
     );
   }
 
+  // create the display canvas
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 
+  // set display canvas properties
   canvas.width = 1920;
   canvas.height = 1080;
   canvas.style.width = "100%";
   canvas.style.backgroundColor = "white";
 
+  // add the display canvas to the document
   div.appendChild(canvas);
 
   // dwitter shorthand
@@ -73,6 +79,7 @@ function showDweet(id, code, fps = 60) {
     let t = (currTime - wastedTime) / 1000;
     let animate = unlock;
 
+    // step animation correctly for locked framerate
     if (!unlock) {
       if (t >= steps / fps) {
         steps++;
@@ -83,13 +90,16 @@ function showDweet(id, code, fps = 60) {
 
     if (visible()) {
       if (animate) {
+        // run the dwitter drawing function
         u(t, c, x, R, C, S, T);
       }
+      // copy the dwitter canvas onto the display canvas
       context.save();
       context.scale(canvas.width / c.width, canvas.height / c.height);
       context.drawImage(c, 0, 0);
       context.restore();
     } else {
+      // keep track of time not on screen (important for unlocked framerate)
       wastedTime += currTime - prevTime;
     }
     prevTime = currTime;
