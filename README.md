@@ -16,7 +16,7 @@ Include the `dweetdiv.js` or `dweetdiv.min.js` in a script tag, and call
 the canvas is set to 100% so it will horizontally fill the div you are adding
 to.
 
-```
+```html
 <div id="id-of-div" style="width: 960px;"></div>
 <script src="dweetdiv.min.js"></script>
 <script>
