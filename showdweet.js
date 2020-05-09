@@ -101,27 +101,25 @@ function showDweet(id, code, fps = 60) {
   /** previous time returned by requestAnimationFrame */
   let prevTime = 0;
   /** how many times to run the dwitter draw function */
-  let currSteps = 0;
+  let currSteps = 1; // won't change from 1 if framerate is unlocked
 
   const update = (currTime) => {
     canvas.width = canvas.width;
     let t = (currTime - wastedTime) / 1000;
-    let animate = unlock;
-
-    // step animation correctly for locked framerate
-    if (!unlock) {
-      if (t >= totalSteps / fps) {
-        const trueSteps = Math.floor(t * fps - totalSteps);
-        currSteps = Math.min(trueSteps, MAX_STEPS);
-        // back time up if we are not doing all of the steps
-        wastedTime += ((trueSteps - currSteps) / fps) * 1000;
-        console.log(currSteps);
-        totalSteps += currSteps;
-        t = totalSteps / fps;
-      }
-    }
 
     if (visible()) {
+      // step animation correctly for locked framerate
+      if (!unlock) {
+        if (t >= totalSteps / fps) {
+          const trueSteps = Math.floor(t * fps - totalSteps);
+          currSteps = Math.min(trueSteps, MAX_STEPS);
+          // back time up if we are not doing all of the steps
+          wastedTime += ((trueSteps - currSteps) / fps) * 1000;
+          totalSteps += currSteps;
+          t = totalSteps / fps;
+        }
+      }
+
       // run the dwitter drawing function, potentially stepping > 1 times if fps
       // is higher than your refresh rate, or not at all if fps is lower than
       // your refresh rate
