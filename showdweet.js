@@ -49,9 +49,22 @@ function showDweet(id, code, fps = 60) {
 
   let u = new Function("t", "c", "x", "R", "C", "S", "T", code);
 
-  const update = (time) => {
+  const visible = () => {
+    const bounding = canvas.getBoundingClientRect();
+    return (
+      bounding.left < window.innerWidth &&
+      bounding.right > 0 &&
+      bounding.top < window.innerHeight &&
+      bounding.bottom > 0
+    );
+  };
+
+  let wastedTime = 0;
+  let prevTime = 0;
+
+  const update = (currTime) => {
     canvas.width = canvas.width; // clear the screen
-    let t = time / 1000;
+    let t = (currTime - wastedTime) / 1000;
     let animate = unlock;
 
     if (!unlock) {
@@ -65,15 +78,20 @@ function showDweet(id, code, fps = 60) {
       }
     }
 
-    if (animate) {
-      x.save();
-      u(t, c, x, R, C, S, T);
-      x.restore();
+    if (visible()) {
+      if (animate) {
+        x.save();
+        u(t, c, x, R, C, S, T);
+        x.restore();
+      }
+      context.save();
+      context.scale(canvas.width / c.width, canvas.height / c.height);
+      context.drawImage(c, 0, 0);
+      context.restore();
+    } else {
+      wastedTime += currTime - prevTime;
     }
-    context.save();
-    context.scale(canvas.width / c.width, canvas.height / c.height);
-    context.drawImage(c, 0, 0);
-    context.restore();
+    prevTime = currTime;
     requestAnimationFrame(update);
   };
   update(0);
