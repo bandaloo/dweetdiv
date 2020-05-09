@@ -24,17 +24,23 @@ to.
 </script>
 ```
 
-By default, the animation loop is locked to 60. You can pass in a different
-FPS as an optional third parameter, or pass in `Infinity` to unlock your
-frame rate. This can look very beautiful if you have a high refresh rate
-monitor, but not all dweets on dwitter were made with this in mind. (My hunch
-is that most work just fine, though!)
+As a third parameter, you can pass in an options object. Here's an example.
+
+```javascript
+addDweet("id-of-div", `// code for dweet` {fps: Infinity, showCode: true});
+```
+
+You can lock the FPS at something other than 60, or pass in `Infinity` to
+unlock your frame rate. This can look very beautiful if you have a high
+refresh rate monitor, but not all dweets on dwitter were made with this in
+mind. (My hunch is that most work just fine, though!) Setting `showCode` to
+`true` will place a div underneath the canvas that contains the code that
+defines the draw loop.
 
 See `example.html` for a full example.
 
-I'm not a dwitter expert so some things might be slightly inaccurate. One
-thing I noticed is that the `R(r, g, b, a)` dwitter shorthand for rgba
-strings will turn all non-numeric values into 0, which is useful for some
-code golfing tricks, so I emulated this. Also, the time is sliced every so
-slightly differently in 60 FPS. If you find a problem and think you can
-address it, open a PR :)
+I'm not a dwitter expert so some things might be slightly inaccurate. The
+time is sliced _ever so slightly_ differently in 60 FPS. This will only
+really matter if you are converting `t` to a string or passing in `t` to
+`fillText` or something. If you find a problem and think you can address it,
+open a PR :)

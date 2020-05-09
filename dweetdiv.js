@@ -2,8 +2,8 @@
 
 /**
  * @typedef {Object} Options
- * @property {number?} [fps] has to be number > 0 (including Infinity)
- * @property {boolean?} [showCode]
+ * @property {number} [fps] has to be number > 0 (including Infinity)
+ * @property {boolean} [showCode]
  */
 
 /**
