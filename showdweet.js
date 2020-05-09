@@ -39,7 +39,13 @@ function showDweet(id, code, fps = 60) {
   const S = Math.sin;
   const T = Math.tan;
 
-  const R = (r, g = 0, b = 0, a = 1) => `rgba(${r},${g},${b},${a})`;
+  const R = (r, g = 0, b = 0, a = 1) => {
+    const f = (n) =>
+      typeof n === "number" && !isNaN(n) && Math.abs(n) !== Math.abs(Infinity)
+        ? n
+        : 0;
+    return `rgba(${f(r)},${f(g)},${f(b)},${f(a)})`;
+  };
 
   const c = document.createElement("canvas");
   c.width = 1920;
@@ -63,26 +69,21 @@ function showDweet(id, code, fps = 60) {
   let prevTime = 0;
 
   const update = (currTime) => {
-    canvas.width = canvas.width; // clear the screen
+    canvas.width = canvas.width;
     let t = (currTime - wastedTime) / 1000;
     let animate = unlock;
 
     if (!unlock) {
       if (t >= steps / fps) {
-        // can't just increment in case you skip by more than one step
-        steps = Math.floor(t * fps) + 1;
+        steps++;
         animate = true;
-        // this makes it so that t being passed into u doesn't depend on slight
-        // time differences
-        t %= steps / fps;
+        t = steps / fps;
       }
     }
 
     if (visible()) {
       if (animate) {
-        x.save();
         u(t, c, x, R, C, S, T);
-        x.restore();
       }
       context.save();
       context.scale(canvas.width / c.width, canvas.height / c.height);
