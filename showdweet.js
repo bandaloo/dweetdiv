@@ -6,7 +6,7 @@
  * @param {string} code the dweet code that defines the draw cycle
  * @param {number} fps can't be NaN or <= 0. pass in Infinity for unlocked fps
  */
-function showDweet(id, code, fps = 60) {
+function addDweet(id, code, fps = 60) {
   /** cap for how many updates to do in one animation frame */
   const MAX_STEPS = 4;
 
