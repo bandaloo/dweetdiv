@@ -1,10 +1,29 @@
 "use strict";
 
-function showDweet(id, code, unlock = false) {
-  const FPS = 60;
+function showDweet(id, code, fps = 60) {
+  if (typeof code !== "string") {
+    throw new TypeError("type of code has to be a string");
+  }
+
   let steps = 0;
+  const unlock = fps === Infinity;
+
+  if (!unlock) {
+    if (typeof fps !== "number" || isNaN(fps)) {
+      throw new TypeError("fps has to be a number that is also not NaN");
+    }
+    if (fps < 0) {
+      throw new RangeError("fps has to be greater than 0");
+    }
+  }
 
   const div = document.getElementById(id);
+  if (div === null) {
+    throw new Error(
+      "couldn't find div to put the canvas (did you get the id wrong?)"
+    );
+  }
+
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 
@@ -36,13 +55,13 @@ function showDweet(id, code, unlock = false) {
     let animate = unlock;
 
     if (!unlock) {
-      if (t > steps / FPS) {
+      if (t >= steps / fps) {
         // can't just increment in case you skip by more than one step
-        steps = Math.floor(t * FPS) + 1;
+        steps = Math.floor(t * fps) + 1;
         animate = true;
         // this makes it so that t being passed into u doesn't depend on slight
         // time differences
-        t %= steps / FPS;
+        t %= steps / fps;
       }
     }
 
