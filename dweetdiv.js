@@ -1,13 +1,21 @@
 "use strict";
 
 /**
+ * @typedef {Object} Options
+ * @property {number?} [fps] has to be number > 0 (including Infinity)
+ * @property {boolean?} [showCode]
+ * @property {boolean?} [hideControls]
+ */
+
+/**
  * plop a dweet into a div
  * @param {string} id the id of the div for the canvas
  * @param {string} code the dweet code that defines the draw cycle
- * @param {number} fps can't be NaN or <= 0. pass in Infinity for unlocked fps
+ * @param {Options} options configuration
  */
-function addDweet(id, code, fps = 60) {
+function addDweet(id, code, options) {
   /** cap for how many updates to do in one animation frame */
+  const fps = options.fps === undefined ? 60 : options.fps;
   const MAX_STEPS = 4;
 
   // code for draw function has to be a string
@@ -49,6 +57,17 @@ function addDweet(id, code, fps = 60) {
   // add the display canvas to the document
   div.appendChild(canvas);
 
+  // create and add the code div
+  const codeDiv = document.createElement("div");
+  codeDiv.innerText = code;
+  codeDiv.style.width = "100%";
+  codeDiv.style.backgroundColor = "black";
+  codeDiv.style.color = "white";
+  codeDiv.style.padding = "2px";
+  codeDiv.style.fontFamily = "monospace";
+  codeDiv.style.wordBreak = "break-all";
+  div.appendChild(codeDiv);
+
   // dwitter shorthand
   const C = Math.cos;
   const S = Math.sin;
@@ -62,17 +81,7 @@ function addDweet(id, code, fps = 60) {
    * @param {*} b blue
    * @param {*} a alpha
    */
-  const R = (r, g = 0, b = 0, a = 1) => {
-    /**
-     * turns non-numbers and weird numbers into 0 like dwitter does
-     * @param {number} n
-     */
-    const f = (n) =>
-      typeof n === "number" && !isNaN(n) && Math.abs(n) !== Math.abs(Infinity)
-        ? n
-        : 0;
-    return `rgba(${f(r)},${f(g)},${f(b)},${f(a)})`;
-  };
+  const R = (r, g, b, a = 1) => `rgba(${r | 0},${g | 0},${b | 0},${a})`;
 
   const c = document.createElement("canvas");
   c.width = 1920;
@@ -126,6 +135,7 @@ function addDweet(id, code, fps = 60) {
       for (let i = 0; i < currSteps; i++) {
         u(t, c, x, R, C, S, T);
       }
+      // TODO only do this if there is an update
       // copy the dwitter canvas onto the display canvas
       context.save();
       context.scale(canvas.width / c.width, canvas.height / c.height);
