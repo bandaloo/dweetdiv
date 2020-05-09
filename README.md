@@ -1,7 +1,7 @@
 # dweetdiv
 
 You can see a
-[live example here](https://www.bandaloo.github.io/dweetdiv/example).
+[live example here](https://www.bandaloo.fun/dweetdiv/example.html).
 
 This is a simple script that will make it easy to add a dweet to your
 webpage. A dweet is a thing that people make on
