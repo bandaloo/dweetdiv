@@ -4,7 +4,6 @@
  * @typedef {Object} Options
  * @property {number?} [fps] has to be number > 0 (including Infinity)
  * @property {boolean?} [showCode]
- * @property {boolean?} [hideControls]
  */
 
 /**
@@ -58,15 +57,17 @@ function addDweet(id, code, options) {
   div.appendChild(canvas);
 
   // create and add the code div
-  const codeDiv = document.createElement("div");
-  codeDiv.innerText = code;
-  codeDiv.style.width = "100%";
-  codeDiv.style.backgroundColor = "black";
-  codeDiv.style.color = "white";
-  codeDiv.style.padding = "2px";
-  codeDiv.style.fontFamily = "monospace";
-  codeDiv.style.wordBreak = "break-all";
-  div.appendChild(codeDiv);
+  if (options.showCode) {
+    const codeDiv = document.createElement("div");
+    codeDiv.innerText = code;
+    codeDiv.style.width = "100%";
+    codeDiv.style.backgroundColor = "black";
+    codeDiv.style.color = "white";
+    codeDiv.style.padding = "2px";
+    codeDiv.style.fontFamily = "monospace";
+    codeDiv.style.wordBreak = "break-all";
+    div.appendChild(codeDiv);
+  }
 
   // dwitter shorthand
   const C = Math.cos;
