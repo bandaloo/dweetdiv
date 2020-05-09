@@ -35,9 +35,8 @@ unlock your frame rate. This can look very beautiful if you have a high
 refresh rate monitor, but not all dweets on dwitter were made with this in
 mind. (My hunch is that most work just fine, though!) Setting `showCode` to
 `true` will place a div underneath the canvas that contains the code that
-defines the draw loop.
-
-See `example.html` for a full example.
+defines the draw loop. The options object can also contain credits object
+which will display above the canvas. See `example.html` for a full example.
 
 I'm not a dwitter expert so some things might be slightly inaccurate. The
 time is sliced _ever so slightly_ differently in 60 FPS. This will only

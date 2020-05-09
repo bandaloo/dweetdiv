@@ -1,26 +1,63 @@
 <html>
-  <head>
-    <title>dweetdiv example</title>
-  </head>
-  <body>
-    <h1>I am locked at 60, the way dweets usually are. I am also showing the code underneath.</h1>
-    <div id="dweet1" style="width: 960px;"></div>
-    <h1>I am running at an unlocked framerate! It will just look like the 60 FPS example unless you have a high refresh rate monitor.</h1>
-    <div id="dweet2" style="width: 480px;"></div>
-    <h1>I may be small, but I am also locked at 15 FPS.</h1>
-    <div id="dweet3" style="width: 240px;"></div>
-    <h1>I won't draw when I'm not seen.</h1>
-    <div id="dweet4" style="width: 240px;"></div>
-    <script src="dweetdiv.js"></script>
-    <script>
-      addDweet(
-        "dweet1",
-        "for(k=i=850;--i;x.fillRect(k-i+r*C(a)*9,420-r*(q=-S(a))*5,r*=4,(q<.7|q>.72|e)?r/2:1e5))e=i%2,r=(2-e/.6)*1e4/i,a=e?(i+t*k/5>>6)**5:T=i-240*t,x.fillStyle=`hsl(${e?a:i} ${e*k+9}% ${S(T/99)*35+35}%`",
-        {fps: 60, showCode: true, credits: {title: "Future Subway", author: "KilledByAPixel", link: "https://www.dwitter.net/d/18657"}}
-      );
-      addDweet("dweet2", `c.width|=0;for(i=1896;i-=24;)for(j=1056;j-=24;)x.fillStyle=R(6*(s=6*(4+C(t*6)+C(C(t)*i/99+t)+S(S(t)*j/99+t))),0,s+i/9),x.fillRect(i,j,s,s)`, {fps: Infinity});
-      addDweet("dweet3", "for(i=200;i--;x.beginPath(x.fill(x.arc(960+d*9*C(i+t)*i,540+d*9*S(i+t)*i,i,0,7))))d=C(S(t/99)*i),x.fillStyle=`hsl(${i},99%,50%,50%)`", {fps: 15});
-      addDweet("dweet4", "x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${200+t**2*9}px Arial`;x.fillText(Math.floor(t),0,1e3)");
-    </script>
+<head>
+  <title>dweetdiv example</title>
+  <style>
+    h1 {
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      width: 960;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    I am locked at 60, the way dweets usually are. I am also showing the code
+    underneath.
+  </h1>
+  <div id="dweet1"></div>
+  <h1>
+    I am running at an unlocked framerate! It will just look like the 60 FPS
+    example unless you have a high refresh rate monitor. I am also showing
+    code and credits.
+  </h1>
+  <div id="dweet2"></div>
+  <h1>
+    I may be small (I'm constrained to the width of my parent node) but I am
+    also locked at 15 FPS.
+  </h1>
+  <div id="dweet3" style="width: 240px;"></div>
+  <h1>I won't draw when I'm not seen. (Scroll down.)</h1>
+  <div id="dweet4" style="width: 240px;"></div>
+  <script src="dweetdiv.js"></script>
+  <!-- rip to 80 columns -->
+  <script>
+    addDweet(
+      "dweet1",
+      `c.width|=0;for(i=1896;i-=24;)for(j=1056;j-=24;)x.fillStyle=R(6*(s=6*(4+C(t*6)+C(C(t)*i/99+t)+S(S(t)*j/99+t))),0,s+i/9),x.fillRect(i,j,s,s)`
+    );
+    addDweet(
+      "dweet2",
+      "for(k=i=850;--i;x.fillRect(k-i+r*C(a)*9,420-r*(q=-S(a))*5,r*=4,(q<.7|q>.72|e)?r/2:1e5))e=i%2,r=(2-e/.6)*1e4/i,a=e?(i+t*k/5>>6)**5:T=i-240*t,x.fillStyle=`hsl(${e?a:i} ${e*k+9}% ${S(T/99)*35+35}%`",
+      {
+        fps: Infinity,
+        showCode: true,
+        credits: {
+          title: "Future Subway",
+          author: "KilledByAPixel",
+          link: "https://www.dwitter.net/d/18657"
+        }
+      }
+    );
+    addDweet(
+      "dweet3",
+      "for(i=200;i--;x.beginPath(x.fill(x.arc(960+d*9*C(i+t)*i,540+d*9*S(i+t)*i,i,0,7))))d=C(S(t/99)*i),x.fillStyle=`hsl(${i},99%,50%,50%)`",
+      {fps: 15});
+    addDweet(
+      "dweet4",
+      "x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${200+t**2*9}px Arial`;x.fillText(Math.floor(t),0,1e3)"
+    );
+  </script>
   <body>
 </html>
