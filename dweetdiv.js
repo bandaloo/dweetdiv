@@ -1,9 +1,17 @@
 "use strict";
 
 /**
+ * @typedef {Object} Credits
+ * @property {string} title
+ * @property {string} author
+ * @property {string} link
+ */
+
+/**
  * @typedef {Object} Options
  * @property {number} [fps] has to be number > 0 (including Infinity)
  * @property {boolean} [showCode]
+ * @property {Credits} [credits]
  */
 
 /**
@@ -53,19 +61,55 @@ function addDweet(id, code, options) {
   canvas.style.width = "100%";
   canvas.style.backgroundColor = "white";
 
+  const styleDiv = () => {
+    const styledDiv = document.createElement("div");
+    styledDiv.style.width = "100%";
+    styledDiv.style.backgroundColor = "black";
+    styledDiv.style.color = "white";
+    styledDiv.style.padding = "4px";
+    styledDiv.style.boxSizing = "border-box";
+    styledDiv.style.fontFamily = "monospace";
+    styledDiv.style.wordBreak = "break-all";
+    return styledDiv;
+  };
+
+  // add the credits div to the document
+  if (options?.credits) {
+    const creditsDiv = styleDiv();
+    const title = options.credits?.title;
+    const author = options.credits?.author;
+    const link = options.credits?.link;
+    // creating elements instead of directly creating a string of html to avoid
+    // breaking the html with input that contains markup, even though it's
+    // verbose
+    const creditsSpan = document.createElement("span");
+    creditsSpan.innerText =
+      "/* credits: " +
+      (title ? " " + title : "") +
+      (author ? " by " + author : "");
+    creditsDiv.appendChild(creditsSpan);
+    if (link) {
+      creditsSpan.innerText += " ";
+      const creditsLink = document.createElement("a");
+      creditsLink.innerText = link;
+      creditsLink.href = link;
+      creditsLink.style.color = "#aaaaaa";
+      creditsDiv.appendChild(creditsLink);
+    }
+    const closingComment = document.createElement("span");
+    closingComment.innerText = " */";
+    //creditsDiv.innerText += "*/";
+    creditsDiv.appendChild(closingComment);
+    div.appendChild(creditsDiv);
+  }
+
   // add the display canvas to the document
   div.appendChild(canvas);
 
   // create and add the code div
   if (options?.showCode) {
-    const codeDiv = document.createElement("div");
+    const codeDiv = styleDiv();
     codeDiv.innerText = code;
-    codeDiv.style.width = "100%";
-    codeDiv.style.backgroundColor = "black";
-    codeDiv.style.color = "white";
-    codeDiv.style.padding = "2px";
-    codeDiv.style.fontFamily = "monospace";
-    codeDiv.style.wordBreak = "break-all";
     div.appendChild(codeDiv);
   }
 

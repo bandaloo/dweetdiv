@@ -13,8 +13,12 @@
     <div id="dweet4" style="width: 240px;"></div>
     <script src="dweetdiv.js"></script>
     <script>
-      addDweet("dweet1", `c.width|=0;for(i=1896;i-=24;)for(j=1056;j-=24;)x.fillStyle=R(6*(s=6*(4+C(t*6)+C(C(t)*i/99+t)+S(S(t)*j/99+t))),0,s+i/9),x.fillRect(i,j,s,s)`, {fps: 60, showCode: true});
-      addDweet("dweet2", `c.width|=d=_=>{x.fillRect(i+j,536+C(i+j+t)*_,32,2e3/_)};for(i=1952;i-=32;x.fillStyle=R(i/9,99))for(j=3;j--;d(3e2))d(90)`, {fps: Infinity});
+      addDweet(
+        "dweet1",
+        "for(k=i=850;--i;x.fillRect(k-i+r*C(a)*9,420-r*(q=-S(a))*5,r*=4,(q<.7|q>.72|e)?r/2:1e5))e=i%2,r=(2-e/.6)*1e4/i,a=e?(i+t*k/5>>6)**5:T=i-240*t,x.fillStyle=`hsl(${e?a:i} ${e*k+9}% ${S(T/99)*35+35}%`",
+        {fps: 60, showCode: true, credits: {title: "Future Subway", author: "KilledByAPixel", link: "https://www.dwitter.net/d/18657"}}
+      );
+      addDweet("dweet2", `c.width|=0;for(i=1896;i-=24;)for(j=1056;j-=24;)x.fillStyle=R(6*(s=6*(4+C(t*6)+C(C(t)*i/99+t)+S(S(t)*j/99+t))),0,s+i/9),x.fillRect(i,j,s,s)`, {fps: Infinity});
       addDweet("dweet3", "for(i=200;i--;x.beginPath(x.fill(x.arc(960+d*9*C(i+t)*i,540+d*9*S(i+t)*i,i,0,7))))d=C(S(t/99)*i),x.fillStyle=`hsl(${i},99%,50%,50%)`", {fps: 15});
       addDweet("dweet4", "x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${200+t**2*9}px Arial`;x.fillText(Math.floor(t),0,1e3)");
     </script>
