@@ -14,7 +14,7 @@
  */
 function addDweet(id, code, options) {
   /** cap for how many updates to do in one animation frame */
-  const fps = options.fps === undefined ? 60 : options.fps;
+  const fps = options?.fps === undefined ? 60 : options.fps;
   const MAX_STEPS = 4;
 
   // code for draw function has to be a string
@@ -57,7 +57,7 @@ function addDweet(id, code, options) {
   div.appendChild(canvas);
 
   // create and add the code div
-  if (options.showCode) {
+  if (options?.showCode) {
     const codeDiv = document.createElement("div");
     codeDiv.innerText = code;
     codeDiv.style.width = "100%";
