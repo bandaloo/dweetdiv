@@ -1,12 +1,21 @@
 "use strict";
 
+/**
+ * plop a dweet into a div
+ * @param {string} id the id of the div for the canvas
+ * @param {string} code the dweet code that defines the draw cycle
+ * @param {number} fps can't be NaN or <= 0. pass in Infinity for unlocked fps
+ */
 function showDweet(id, code, fps = 60) {
+  /** cap for how many updates to do in one animation frame */
+  const MAX_STEPS = 4;
+
   // code for draw function has to be a string
   if (typeof code !== "string") {
     throw new TypeError("type of code has to be a string");
   }
 
-  let steps = 0;
+  let totalSteps = 0;
   const unlock = fps === Infinity;
 
   // bad fps can result in either a type error or range error
@@ -45,7 +54,19 @@ function showDweet(id, code, fps = 60) {
   const S = Math.sin;
   const T = Math.tan;
 
+  /**
+   * takes in values of any type and makes an rbga string, mimicking the
+   * behavior of dwitter
+   * @param {*} r red
+   * @param {*} g green
+   * @param {*} b blue
+   * @param {*} a alpha
+   */
   const R = (r, g = 0, b = 0, a = 1) => {
+    /**
+     * turns non-numbers and weird numbers into 0 like dwitter does
+     * @param {number} n
+     */
     const f = (n) =>
       typeof n === "number" && !isNaN(n) && Math.abs(n) !== Math.abs(Infinity)
         ? n
@@ -61,6 +82,7 @@ function showDweet(id, code, fps = 60) {
 
   let u = new Function("t", "c", "x", "R", "C", "S", "T", code);
 
+  /** returns whether the canvas is visible */
   const visible = () => {
     const bounding = canvas.getBoundingClientRect();
     return (
@@ -71,8 +93,15 @@ function showDweet(id, code, fps = 60) {
     );
   };
 
+  /**
+   * how much the dweet's time should differ from the time returned by
+   * requestAnimationFrame
+   */
   let wastedTime = 0;
+  /** previous time returned by requestAnimationFrame */
   let prevTime = 0;
+  /** how many times to run the dwitter draw function */
+  let currSteps = 0;
 
   const update = (currTime) => {
     canvas.width = canvas.width;
@@ -81,16 +110,22 @@ function showDweet(id, code, fps = 60) {
 
     // step animation correctly for locked framerate
     if (!unlock) {
-      if (t >= steps / fps) {
-        steps++;
-        animate = true;
-        t = steps / fps;
+      if (t >= totalSteps / fps) {
+        const trueSteps = Math.floor(t * fps - totalSteps);
+        currSteps = Math.min(trueSteps, MAX_STEPS);
+        // back time up if we are not doing all of the steps
+        wastedTime += (trueSteps - currSteps) * fps;
+        console.log(currSteps);
+        totalSteps += currSteps;
+        t = totalSteps / fps;
       }
     }
 
     if (visible()) {
-      if (animate) {
-        // run the dwitter drawing function
+      // run the dwitter drawing function, potentially stepping > 1 times if fps
+      // is higher than your refresh rate, or not at all if fps is lower than
+      // your refresh rate
+      for (let i = 0; i < currSteps; i++) {
         u(t, c, x, R, C, S, T);
       }
       // copy the dwitter canvas onto the display canvas
