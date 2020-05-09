@@ -98,7 +98,6 @@ function addDweet(id, code, options) {
     }
     const closingComment = document.createElement("span");
     closingComment.innerText = " */";
-    //creditsDiv.innerText += "*/";
     creditsDiv.appendChild(closingComment);
     div.appendChild(creditsDiv);
   }
