@@ -66,11 +66,11 @@
       {fps: 15});
     addDweet(
       "dweet4",
-      "x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${200+t**2*9}px Arial`;x.fillText(Math.floor(t),0,1e3)"
+      "d=1e3;c.width|=0,x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${d}px'`;x.fillText(Math.floor(t),d*Math.abs(S(22/7*t)),d)"
     );
     addDweet(
       "dweet5",
-      "for(i=480;i--;)for(k=270;k--;)x.fillStyle=R(((i-k)&k)*256),x.fillRect(i*4,k*4,4,4)",
+      "for(i=480;i--;)for(j=270;j--;)x.fillStyle=R((i&j)*256),x.fillRect(i*4,j*4,4,4)",
       {fps: 0, showCode: true, credits: {title: "Simple Bitwise Sierpinksi"}}
     );
   </script>
