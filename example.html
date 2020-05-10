@@ -2,7 +2,7 @@
 <head>
   <title>dweetdiv example</title>
   <style>
-    h1 {
+    h1, h2, p {
       font-family: Helvetica, Arial, sans-serif;
     }
 
@@ -12,25 +12,33 @@
   </style>
 </head>
 <body>
-  <h1>I am locked at 60, the way dweets usually are.</h1>
+  <h1>Examples for dweetdiv</h1>
+  <p>
+    dweetdiv allows you to easily add a dweet to your webpage.
+    <a href="https://github.com/bandaloo/dweetdiv">Here is the repo.</a>
+  </p>
+  <h2>I am locked at 60, the way dweets usually are.</h2>
   <div id="dweet1"></div>
-  <h1>
+  <h2>
     I am running at an unlocked framerate! It will just look like the 60 FPS
     example unless you have a high refresh rate monitor. I am also showing
     code and credits.
-  </h1>
+  </h2>
   <div id="dweet2"></div>
-  <h1>
+  <h2>
     I may be small (I'm constrained to the width of my parent node) but I am
     also locked at 15 FPS.
-  </h1>
+  </h2>
   <div id="dweet3" style="width: 240px;"></div>
-  <h1>
+  <h2>
     I won't draw when I'm not seen. Scroll up, scroll back down and you'll
     see I don't count up when I'm not visible.
-  </h1>
+  </h2>
   <div id="dweet4" style="width: 240px;"></div>
-  <h1>I have an FPS of zero, so I just do one draw call.</h1>
+  <h2>
+    I have an FPS of zero, so I just do one draw call. I won't waste
+    resources by trying to draw myself every frame.
+  </h2>
   <div id="dweet5"></div>
   <script src="dweetdiv.js"></script>
   <!-- rip to 80 columns -->
