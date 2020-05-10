@@ -189,10 +189,7 @@ function addDweet(id, code, options) {
         context.scale(canvas.width / c.width, canvas.height / c.height);
         context.drawImage(c, 0, 0);
         context.restore();
-        if (fps === 0) {
-          console.log("T" + t);
-          return;
-        }
+        if (fps === 0) return;
       }
     } else {
       // keep track of time not on screen (important for unlocked framerate)
