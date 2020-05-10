@@ -39,7 +39,7 @@ function addDweet(id, code, options) {
       throw new TypeError("fps has to be a number that is also not NaN");
     }
     if (fps < 0) {
-      throw new RangeError("fps has to be greater than 0");
+      throw new RangeError("fps has to be greater or equal to 0");
     }
   }
 
@@ -84,9 +84,7 @@ function addDweet(id, code, options) {
     // verbose
     const creditsSpan = document.createElement("span");
     creditsSpan.innerText =
-      "/* credits: " +
-      (title ? " " + title : "") +
-      (author ? " by " + author : "");
+      "/* " + (title ? " " + title : "") + (author ? " by " + author : "");
     creditsDiv.appendChild(creditsSpan);
     if (link) {
       creditsSpan.innerText += " ";
@@ -166,7 +164,8 @@ function addDweet(id, code, options) {
     if (visible()) {
       // step animation correctly for locked framerate
       if (!unlock) {
-        if (t >= totalSteps / fps) {
+        if (fps === 0) currSteps = 1;
+        else if (t >= totalSteps / fps) {
           const trueSteps = Math.floor(t * fps - totalSteps);
           currSteps = Math.min(trueSteps, MAX_STEPS);
           // back time up if we are not doing all of the steps
@@ -190,6 +189,10 @@ function addDweet(id, code, options) {
         context.scale(canvas.width / c.width, canvas.height / c.height);
         context.drawImage(c, 0, 0);
         context.restore();
+        if (fps === 0) {
+          console.log("T" + t);
+          return;
+        }
       }
     } else {
       // keep track of time not on screen (important for unlocked framerate)

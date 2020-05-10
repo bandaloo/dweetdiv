@@ -25,8 +25,13 @@
     also locked at 15 FPS.
   </h1>
   <div id="dweet3" style="width: 240px;"></div>
-  <h1>I won't draw when I'm not seen. (Scroll down.)</h1>
+  <h1>
+    I won't draw when I'm not seen. Scroll up, scroll back down and you'll
+    see I don't count up when I'm not visible.
+  </h1>
   <div id="dweet4" style="width: 240px;"></div>
+  <h1>I have an FPS of zero, so I just do one draw call.</h1>
+  <div id="dweet5"></div>
   <script src="dweetdiv.js"></script>
   <!-- rip to 80 columns -->
   <script>
@@ -54,6 +59,11 @@
     addDweet(
       "dweet4",
       "x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${200+t**2*9}px Arial`;x.fillText(Math.floor(t),0,1e3)"
+    );
+    addDweet(
+      "dweet5",
+      "for(i=480;i--;)for(k=270;k--;)x.fillStyle=R(((i-k)&k)*256),x.fillRect(i*4,k*4,4,4)",
+      {fps: 0, showCode: true, credits: {title: "Simple Bitwise Sierpinksi"}}
     );
   </script>
   <body>
