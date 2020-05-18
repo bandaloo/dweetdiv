@@ -1,78 +1,115 @@
 <html>
-<head>
-  <title>dweetdiv example</title>
-  <style>
-    h1, h2, p {
-      font-family: Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      width: 960;
-    }
-  </style>
-</head>
-<body>
-  <h1>Examples for dweetdiv</h1>
-  <p>
-    dweetdiv allows you to easily add a dweet to your webpage.
-    <a href="https://github.com/bandaloo/dweetdiv">Here is the repo.</a>
-  </p>
-  <h2>I am locked at 60, the way dweets usually are.</h2>
-  <div id="dweet1"></div>
-  <h2>
-    I am running at an unlocked framerate! It will just look like the 60 FPS
-    example unless you have a high refresh rate monitor. I am also showing
-    code and credits.
-  </h2>
-  <div id="dweet2"></div>
-  <h2>
-    I may be small (I'm constrained to the width of my parent node) but I am
-    also locked at 15 FPS.
-  </h2>
-  <div id="dweet3" style="width: 240px;"></div>
-  <h2>
-    I won't draw when I'm not seen. Scroll up, scroll back down and you'll
-    see I don't count up when I'm not visible.
-  </h2>
-  <div id="dweet4" style="width: 240px;"></div>
-  <h2>
-    I have an FPS of zero, so I just do one draw call. I won't waste
-    resources by trying to draw myself every frame.
-  </h2>
-  <div id="dweet5"></div>
-  <script src="dweetdiv.js"></script>
-  <!-- rip to 80 columns -->
-  <script>
-    addDweet(
-      "dweet1",
-      `c.width|=0;for(i=1896;i-=24;)for(j=1056;j-=24;)x.fillStyle=R(6*(s=6*(4+C(t*6)+C(C(t)*i/99+t)+S(S(t)*j/99+t))),0,s+i/9),x.fillRect(i,j,s,s)`
-    );
-    addDweet(
-      "dweet2",
-      "for(k=i=850;--i;x.fillRect(k-i+r*C(a)*9,420-r*(q=-S(a))*5,r*=4,(q<.7|q>.72|e)?r/2:1e5))e=i%2,r=(2-e/.6)*1e4/i,a=e?(i+t*k/5>>6)**5:T=i-240*t,x.fillStyle=`hsl(${e?a:i} ${e*k+9}% ${S(T/99)*35+35}%`",
-      {
-        fps: Infinity,
-        showCode: true,
-        credits: {
-          title: "Future Subway",
-          author: "KilledByAPixel",
-          link: "https://www.dwitter.net/d/18657"
-        }
+  <head>
+    <title>dweetdiv example</title>
+    <style>
+      h1,
+      h2,
+      p {
+        font-family: Helvetica, Arial, sans-serif;
       }
-    );
-    addDweet(
-      "dweet3",
-      "for(i=200;i--;x.beginPath(x.fill(x.arc(960+d*9*C(i+t)*i,540+d*9*S(i+t)*i,i,0,7))))d=C(S(t/99)*i),x.fillStyle=`hsl(${i},99%,50%,50%)`",
-      {fps: 15});
-    addDweet(
-      "dweet4",
-      "d=1e3;c.width|=0,x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${d}px'`;x.fillText(Math.floor(t),d*Math.abs(S(22/7*t)),d)"
-    );
-    addDweet(
-      "dweet5",
-      "for(i=480;i--;)for(j=270;j--;)x.fillStyle=R((i&j)*256),x.fillRect(i*4,j*4,4,4)",
-      {fps: 0, showCode: true, credits: {title: "Simple Bitwise Sierpinksi"}}
-    );
-  </script>
+
+      body {
+        width: 960;
+      }
+    </style>
+  </head>
   <body>
+    <h1>Examples for dweetdiv</h1>
+    <p>
+      dweetdiv allows you to easily add a dweet to your webpage.
+      <a href="https://github.com/bandaloo/dweetdiv">Here is the repo.</a>
+    </p>
+    <h2>I am locked at 60, the way dweets usually are.</h2>
+    <div id="dweet1"></div>
+    <h2>
+      I am running at an unlocked framerate! It will just look like the 60 FPS
+      example unless you have a high refresh rate monitor. I am also showing
+      code and credits.
+    </h2>
+    <div id="dweet2"></div>
+    <h2>
+      I may be small (I'm constrained to the width of my parent node) but I am
+      also locked at 15 FPS.
+    </h2>
+    <div id="dweet3" style="width: 240px;"></div>
+    <h2>
+      I won't draw when I'm not seen. Scroll up, scroll back down and you'll see
+      I don't count up when I'm not visible.
+    </h2>
+    <div id="dweet4" style="width: 240px;"></div>
+    <h2>
+      I have an FPS of zero, so I just do one draw call. I won't waste resources
+      by trying to draw myself every frame.
+    </h2>
+    <div id="dweet5"></div>
+    <h2>
+      I depend on the last drawn frame since I trace a line. If there are frame
+      skips, I don't want to skip ahead in time, since that would change the
+      picture. I will only do up to four draw calls between animation frames.
+    </h2>
+    <div id="dweet6"></div>
+    <h2>Scroll way down to see a dweet that is typically laggy on dwitter.</h2>
+    <div style="height: 1000px;"></div>
+    <h2>
+      I'm probably not hitting 60 FPS (if you have a computer like I do) but I
+      am running at a constant time. That's because I won't draw every frame if
+      things are slowing down.
+    </h2>
+    <div id="dweet7"></div>
+    <script src="dweetdiv.js"></script>
+    <!-- rip to 80 columns -->
+    <script>
+      addDweet(
+        "dweet1",
+        `c.width|=0;for(i=1896;i-=24;)for(j=1056;j-=24;)x.fillStyle=R(6*(s=6*(4+C(t*6)+C(C(t)*i/99+t)+S(S(t)*j/99+t))),0,s+i/9),x.fillRect(i,j,s,s)`
+      );
+      addDweet(
+        "dweet2",
+        "for(k=i=850;--i;x.fillRect(k-i+r*C(a)*9,420-r*(q=-S(a))*5,r*=4,(q<.7|q>.72|e)?r/2:1e5))e=i%2,r=(2-e/.6)*1e4/i,a=e?(i+t*k/5>>6)**5:T=i-240*t,x.fillStyle=`hsl(${e?a:i} ${e*k+9}% ${S(T/99)*35+35}%`",
+        {
+          fps: Infinity,
+          showCode: true,
+          credits: {
+            title: "Future Subway",
+            author: "KilledByAPixel",
+            link: "https://www.dwitter.net/d/18657",
+          },
+        }
+      );
+      addDweet(
+        "dweet3",
+        "for(i=200;i--;x.beginPath(x.fill(x.arc(960+d*9*C(i+t)*i,540+d*9*S(i+t)*i,i,0,7))))d=C(S(t/99)*i),x.fillStyle=`hsl(${i},99%,50%,50%)`",
+        { fps: 15 }
+      );
+      addDweet(
+        "dweet4",
+        "c.width|=0;d=1e3;x.fillStyle=`hsl(${t*99} 50%50%)`;x.font=`${d}px'`;x.fillText(Math.floor(t),d*Math.abs(S(22/7*t)),d)"
+      );
+      addDweet(
+        "dweet5",
+        "for(i=480;i--;)for(j=270;j--;)x.fillStyle=R((i&j)*256),x.fillRect(i*4,j*4,4,4)",
+        {
+          fps: 0,
+          showCode: true,
+          credits: { title: "Simple Bitwise Sierpinksi" },
+        }
+      );
+      addDweet(
+        "dweet6",
+        "x.fillStyle=R(99+99*C(t));x.fillRect(960+900*S(t*4),540+500*C(t*3),29,29)",
+        { fps: 120, intermediateDraws: 4 }
+      );
+      addDweet(
+        "dweet7",
+        "w=240;for(i=w;i--;)for(j=135;j--;)d=(i)&j,x.fillStyle=`hsl(${d?d+t*w:(i+t*w)},40%,40%)`,x.fillRect(i*8+C(t*3+j/2)*8,j*8,8,8)",
+        {
+          showCode: true,
+          credits: {
+            title: "Wavy Rainbow Sierpinski",
+          },
+          intermediateDraws: Infinity,
+        }
+      );
+    </script>
+  </body>
 </html>

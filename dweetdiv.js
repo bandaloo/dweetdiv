@@ -9,7 +9,8 @@
 
 /**
  * @typedef {Object} Options
- * @property {number} [fps] has to be number > 0 (including Infinity)
+ * @property {number} [fps] has to be number => 0 (including Infinity)
+ * @property {number} [intermediateDraws]
  * @property {boolean} [showCode]
  * @property {Credits} [credits]
  */
@@ -23,7 +24,16 @@
 function addDweet(id, code, options) {
   /** cap for how many updates to do in one animation frame */
   const fps = options?.fps === undefined ? 60 : options.fps;
-  const MAX_STEPS = 4;
+  // if fps is 120, you probably want 2 intermediate draws by default; if 60 you
+  // probably just want 1
+  const maxSteps =
+    options?.intermediateDraws === undefined
+      ? Math.max(1, Math.ceil(fps / 60))
+      : options?.intermediateDraws;
+
+  // will also be false with unlocked framerate because `maxSteps` will be
+  // Infinite due to the FPS being infinite
+  const drawIntermediate = maxSteps !== Infinity;
 
   // code for draw function has to be a string
   if (typeof code !== "string") {
@@ -34,6 +44,7 @@ function addDweet(id, code, options) {
   const unlock = fps === Infinity;
 
   // bad fps can result in either a type error or range error
+  // TODO get rid of this if?
   if (!unlock) {
     if (typeof fps !== "number" || isNaN(fps)) {
       throw new TypeError("fps has to be a number that is also not NaN");
@@ -51,15 +62,11 @@ function addDweet(id, code, options) {
     );
   }
 
-  // create the display canvas
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
+  let momentaryPause = false;
 
-  // set display canvas properties
-  canvas.width = 1920;
-  canvas.height = 1080;
-  canvas.style.width = "100%";
-  canvas.style.backgroundColor = "white";
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") momentaryPause = true;
+  });
 
   const styleDiv = () => {
     const styledDiv = document.createElement("div");
@@ -100,16 +107,6 @@ function addDweet(id, code, options) {
     div.appendChild(creditsDiv);
   }
 
-  // add the display canvas to the document
-  div.appendChild(canvas);
-
-  // create and add the code div
-  if (options?.showCode) {
-    const codeDiv = styleDiv();
-    codeDiv.innerText = code;
-    div.appendChild(codeDiv);
-  }
-
   // dwitter shorthand
   const C = Math.cos;
   const S = Math.sin;
@@ -128,14 +125,25 @@ function addDweet(id, code, options) {
   const c = document.createElement("canvas");
   c.width = 1920;
   c.height = 1080;
+  c.style.width = "100%";
+
+  // add the canvas to the document
+  div.appendChild(c);
 
   const x = c.getContext("2d");
 
   let u = new Function("t", "c", "x", "R", "C", "S", "T", code);
 
+  // create and add the code div
+  if (options?.showCode) {
+    const codeDiv = styleDiv();
+    codeDiv.innerText = code;
+    div.appendChild(codeDiv);
+  }
+
   /** returns whether the canvas is visible */
   const visible = () => {
-    const bounding = canvas.getBoundingClientRect();
+    const bounding = c.getBoundingClientRect();
     return (
       bounding.left < window.innerWidth &&
       bounding.right > 0 &&
@@ -159,40 +167,47 @@ function addDweet(id, code, options) {
    * @param {number} currTime
    */
   const update = (currTime) => {
-    let t = (currTime - wastedTime) / 1000;
+    if (momentaryPause) {
+      momentaryPause = false;
+      wastedTime += currTime - prevTime;
+      // request a new animation frame without doing anything
+      prevTime = currTime;
+      requestAnimationFrame(update);
+    }
+
+    let finalTime = (currTime - wastedTime) / 1000;
 
     if (visible()) {
       // step animation correctly for locked framerate
       if (!unlock) {
+        // has to be handled separately to avoid division by zero
         if (fps === 0) currSteps = 1;
-        else if (t >= totalSteps / fps) {
-          const trueSteps = Math.floor(t * fps - totalSteps);
-          currSteps = Math.min(trueSteps, MAX_STEPS);
+        else if (finalTime >= totalSteps / fps) {
+          const trueSteps = Math.floor(finalTime * fps - totalSteps);
+          currSteps = Math.min(trueSteps, maxSteps);
           // back time up if we are not doing all of the steps
           wastedTime += ((trueSteps - currSteps) / fps) * 1000;
           totalSteps += currSteps;
-          t = totalSteps / fps;
+          //t = totalSteps / fps;
         }
       }
 
       // run the dwitter drawing function, potentially stepping > 1 times if fps
       // is higher than your refresh rate, or not at all if fps is lower than
       // your refresh rate
-      for (let i = 0; i < currSteps; i++) {
-        u(t, c, x, R, C, S, T);
+      if (drawIntermediate) {
+        for (let i = 0; i < currSteps; i++) {
+          // draw intermediate steps to canvas even though they aren't drawn to
+          // the screen
+          u((totalSteps + (i - currSteps)) / fps, c, x, R, C, S, T);
+        }
+      } else if (currSteps) {
+        u(finalTime, c, x, R, C, S, T);
       }
 
-      // copy the dwitter canvas onto the display canvas
-      if (currSteps) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.save();
-        context.scale(canvas.width / c.width, canvas.height / c.height);
-        context.drawImage(c, 0, 0);
-        context.restore();
-        if (fps === 0) return;
-      }
+      if (fps === 0) return;
     } else {
-      // keep track of time not on screen (important for unlocked framerate)
+      // keep track of time not on screen
       wastedTime += currTime - prevTime;
     }
     prevTime = currTime;

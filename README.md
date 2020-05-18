@@ -38,6 +38,12 @@ mind. (My hunch is that most work just fine, though!) Setting `showCode` to
 defines the draw loop. The options object can also contain credits object
 which will display above the canvas. See `example.html` for a full example.
 
+There are also very picky timing options. By default, no draw calls will be
+skipped because that could potentially change the look of the dweet,
+especially if you are not clearing the canvas. If you want to skip draw calls
+to run at a constant time, add `drawIntermediate: Infinity` to the options
+object.
+
 I'm not a dwitter expert so some things might be slightly inaccurate. The
 time is sliced _ever so slightly_ differently in 60 FPS. This will only
 really matter if you are converting `t` to a string or passing in `t` to
