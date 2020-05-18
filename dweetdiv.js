@@ -31,32 +31,40 @@ function addDweet(id, code, options) {
       ? Math.max(1, Math.ceil(fps / 60))
       : options?.intermediateDraws;
 
-  // will also be false with unlocked framerate because `maxSteps` will be
-  // Infinite due to the FPS being infinite
-  const drawIntermediate = maxSteps !== Infinity;
+  // error checking for type and range errors
+  const numErr = (str, num) => {
+    if (typeof fps !== "number" || isNaN(fps)) {
+      throw new TypeError(str + "has to be a number that is also not NaN");
+    }
+  };
 
-  // code for draw function has to be a string
+  numErr("fps", fps);
+  numErr("intermediateDraws", maxSteps);
+
+  if (fps < 0) {
+    throw new RangeError("fps has to be greater or equal to 0");
+  }
+
+  if (maxSteps <= 0 || maxSteps !== Math.floor(maxSteps)) {
+    throw new RangeError(
+      "drawIntermediate has to be integer greater than 0 or Infinity"
+    );
+  }
+
   if (typeof code !== "string") {
     throw new TypeError("type of code has to be a string");
   }
 
+  // will also be false with unlocked framerate because `maxSteps` will be
+  // Infinite due to the FPS being infinite
+  const drawIntermediate = maxSteps !== Infinity;
+
   let totalSteps = 0;
   const unlock = fps === Infinity;
 
-  // bad fps can result in either a type error or range error
-  // TODO get rid of this if?
-  if (!unlock) {
-    if (typeof fps !== "number" || isNaN(fps)) {
-      throw new TypeError("fps has to be a number that is also not NaN");
-    }
-    if (fps < 0) {
-      throw new RangeError("fps has to be greater or equal to 0");
-    }
-  }
-
   // try to get the div for adding the display canvas
-  const div = document.getElementById(id);
-  if (div === null) {
+  const targetDiv = document.getElementById(id);
+  if (targetDiv === null) {
     throw new Error(
       "couldn't find div to put the canvas (did you get the id wrong?)"
     );
@@ -104,7 +112,7 @@ function addDweet(id, code, options) {
     const closingComment = document.createElement("span");
     closingComment.innerText = " */";
     creditsDiv.appendChild(closingComment);
-    div.appendChild(creditsDiv);
+    targetDiv.appendChild(creditsDiv);
   }
 
   // dwitter shorthand
@@ -127,8 +135,17 @@ function addDweet(id, code, options) {
   c.height = 1080;
   c.style.width = "100%";
 
-  // add the canvas to the document
-  div.appendChild(c);
+  /** the div to hide extra length when canvas has a changed width */
+  const containingDiv = document.createElement("div");
+
+  // for constant aspect ratio
+  containingDiv.style.width = "100%";
+  containingDiv.style.height = "0";
+  containingDiv.style.paddingBottom = "56.25%"; // for 16:9 aspect ratio
+  containingDiv.style.overflow = "hidden";
+
+  containingDiv.appendChild(c);
+  targetDiv.appendChild(containingDiv);
 
   const x = c.getContext("2d");
 
@@ -138,7 +155,7 @@ function addDweet(id, code, options) {
   if (options?.showCode) {
     const codeDiv = styleDiv();
     codeDiv.innerText = code;
-    div.appendChild(codeDiv);
+    targetDiv.appendChild(codeDiv);
   }
 
   /** returns whether the canvas is visible */
@@ -188,7 +205,6 @@ function addDweet(id, code, options) {
           // back time up if we are not doing all of the steps
           wastedTime += ((trueSteps - currSteps) / fps) * 1000;
           totalSteps += currSteps;
-          //t = totalSteps / fps;
         }
       }
 

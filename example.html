@@ -48,6 +48,11 @@
       picture. I will only do up to four draw calls between animation frames.
     </h2>
     <div id="dweet6"></div>
+    <h2>
+      My width is set to 960 instead of 1920. Like dwitter, I "zoom in" at the
+      corner and keep the same aspect ratio without stretching.
+    </h2>
+    <div id="dweet7"></div>
     <h2>Scroll way down to see a dweet that is typically laggy on dwitter.</h2>
     <div style="height: 1000px;"></div>
     <h2>
@@ -55,7 +60,7 @@
       am running at a constant time. That's because I won't draw every frame if
       things are slowing down.
     </h2>
-    <div id="dweet7"></div>
+    <div id="dweet8"></div>
     <script src="dweetdiv.js"></script>
     <!-- rip to 80 columns -->
     <script>
@@ -101,6 +106,10 @@
       );
       addDweet(
         "dweet7",
+        "c.width=960;for(i=0;i<9;i++)x.fillRect(400+i*100+S(t)*300,400,50,200)"
+      );
+      addDweet(
+        "dweet8",
         "w=240;for(i=w;i--;)for(j=135;j--;)d=(i)&j,x.fillStyle=`hsl(${d?d+t*w:(i+t*w)},40%,40%)`,x.fillRect(i*8+C(t*3+j/2)*8,j*8,8,8)",
         {
           showCode: true,
